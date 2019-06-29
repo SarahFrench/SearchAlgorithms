@@ -28,9 +28,9 @@ listsToSearch.forEach(list => {
 })
 
 //Binary Search
-function binarySearch(wordsList, wordToFind, startTime){
+function binarySearch(wordsList, wordToFind){
   let midpoint = Math.floor(wordsList.length / 2);
-  console.log("Midpoint = " + wordsList[midpoint])
+  // console.log("Midpoint = " + wordsList[midpoint])
   if (wordsList.length === 1 && wordsList[midpoint].toLowerCase() != wordToFind) {
     console.log("NOT FOUND");
     return undefined;
@@ -38,17 +38,13 @@ function binarySearch(wordsList, wordToFind, startTime){
   if (wordsList[midpoint].toLowerCase() === wordToFind){
     console.log("FOUND");
     console.log(wordsList[midpoint]);
-    endTime = process.hrtime()[1]
-    let nanoseconds = endTime - startTime;
-    let microseconds = nanoseconds / 1000;
-    durations.push(microseconds);
     return wordsList[midpoint];
   } else if (wordsList[midpoint].toLowerCase() < wordToFind) {
     wordsList = wordsList.slice(midpoint, wordsList.length);
-    binarySearch(wordsList, wordToFind, startTime);
+    binarySearch(wordsList, wordToFind);
   } else {
     wordsList = wordsList.slice(0,midpoint);
-    binarySearch(wordsList, wordToFind, startTime);
+    binarySearch(wordsList, wordToFind);
   }
 }
 
@@ -59,48 +55,48 @@ function binarySearch(wordsList, wordToFind, startTime){
 //   let seconds = endTime - startTime;
 //   durations.push(seconds);
 // })
+
 let endTime = 0;
-
-let startTime = process.hrtime()[1]
+let startTime = new Date().getTime();
 console.log(startTime);
-binarySearch(n, wordToFind, startTime)
+binarySearch(n, wordToFind)
+endTime = new Date().getTime();
+durations.push(endTime-startTime);
 
-
-
-startTime = process.hrtime()[1]
+startTime = new Date().getTime();
 console.log(startTime);
-binarySearch(n2, wordToFind, startTime)
+binarySearch(n2, wordToFind)
+endTime = new Date().getTime();
+durations.push(endTime-startTime);
 
-
-
-startTime = process.hrtime()[1]
+startTime = new Date().getTime();
 console.log(startTime);
-binarySearch(n3, wordToFind, startTime)
+binarySearch(n3, wordToFind)
+endTime = new Date().getTime();
+durations.push(endTime-startTime);
 
-
-
-startTime = process.hrtime()[1]
+startTime = new Date().getTime();
 console.log(startTime);
-binarySearch(n4, wordToFind, startTime)
+binarySearch(n4, wordToFind)
+endTime = new Date().getTime();
+durations.push(endTime-startTime);
 
-
-
-startTime = process.hrtime()[1]
+startTime = new Date().getTime();
 console.log(startTime);
-binarySearch(n5, wordToFind, startTime)
+binarySearch(n5, wordToFind)
+endTime = new Date().getTime();
+durations.push(endTime-startTime);
 
-
-
-startTime = process.hrtime()[1]
+startTime = new Date().getTime()
 console.log(startTime);
-binarySearch(n6, wordToFind, startTime)
-
-
+binarySearch(n6, wordToFind)
+endTime = new Date().getTime();
+durations.push(endTime-startTime);
 
 console.log(listsLengths);
 console.log(durations);
 
-//Pushing data up to plot.ly website
+// Pushing data up to plot.ly website
 
 var durationOfSearches = {
   x: listsLengths,
@@ -108,7 +104,7 @@ var durationOfSearches = {
   type: "scatter"
 };
 var data = [durationOfSearches];
-var graphOptions = {filename: "binary-search", fileopt: "overwrite"};
+var graphOptions = {filename: "binary-search4", fileopt: "overwrite"};
 plotly.plot(data, graphOptions, function (err, msg) {
     console.log(msg);
 });
