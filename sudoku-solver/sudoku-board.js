@@ -46,6 +46,14 @@ class Sudoku {
     return this.board[position]
   }
 
+  remainingSpace(){
+    let verdict = false;
+    this.board.forEach( row => {
+      verdict = (row.includes(0) ? true : verdict)
+    })
+    return verdict
+  }
+
   findNumberAtPosition([x,y]){
     // x = column, y = row
     return this.row(y)[x];
@@ -66,7 +74,7 @@ class Sudoku {
     else if([3,4,5].includes(x)){
       if ([0,1,2].includes(y)){return [3,0];}
       else if ([3,4,5].includes(y)){return [3,3];}
-      else if ([6,7,8].includes(y)){ console.log([3,6]);return [3,6];}
+      else if ([6,7,8].includes(y)){return [3,6];}
     }
     else if([6,7,8].includes(x)){
       if ([0,1,2].includes(y)){return [6,1];}
@@ -100,22 +108,38 @@ class Sudoku {
     uniqueNumbers = [...new Set(uniqueNumbers)].sort();
     return uniqueNumbers;
   }
+
+  solveEasySpaces(){
+    // Finds easy to solve spaces and keeps trying to solve these until they run out
+    let shouldLoopContinue = true;
+    while (shouldLoopContinue){
+      let changes = [];
+      for (let x = 0; x < 9; x++){
+        for (let y = 0; y < 9; y++){
+          let precludedNumbers = new Set(this.findNumbersAffectingPosition([x,y]));
+          let possibleNumbers = difference(NUMBERS, precludedNumbers)
+          possibleNumbers = Array.from(possibleNumbers)
+          if (possibleNumbers.length === 1 && this.findNumberAtPosition([x,y]) === 0){
+            console.log("Put number " + possibleNumbers[0] + " at position x:" + x + " y:" + y);
+            this.updateNumberAtPosition([x,y], possibleNumbers[0] )
+            changes.push(true);
+          } else {
+            changes.push(false);
+          }
+        }
+      }
+      if (!changes.includes(true)){
+        shouldLoopContinue = false;
+      }
+    }
+  }
 }
 
 let mySudoku = new Sudoku(board);
 
-for (let x = 0; x < 9; x++){
-  for (let y = 0; y < 9; y++){
-    let precludedNumbers = new Set(mySudoku.findNumbersAffectingPosition([x,y]));
-    let possibleNumbers = difference(NUMBERS, precludedNumbers)
-    possibleNumbers = Array.from(possibleNumbers)
-    if (possibleNumbers.length === 1 && mySudoku.findNumberAtPosition([x,y]) === 0){
-      console.log("You can put number " + possibleNumbers[0]);
-      console.log("at position x:" + x + " y:" + y);
-      mySudoku.updateNumberAtPosition([x,y], possibleNumbers[0] )
-    }
-  }
-}
+
+mySudoku.solveEasySpaces()
+
 
 mySudoku.board.forEach( row => {
   console.log(row);
