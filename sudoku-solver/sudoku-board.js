@@ -64,7 +64,6 @@ class Sudoku {
   }
 
   findNumbersAffectingPosition([x,y]){
-    let row = this.row(x);
     let column = this.column(x);
     let numbers = row.concat(column);
     return this.uniqueNumbers(numbers)
