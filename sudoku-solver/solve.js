@@ -14,7 +14,7 @@ class Sudoku {
     let column = [];
     this.board.forEach( row => {
       column.push(row[position]);
-    })
+    });
     return column;
   }
 
@@ -25,8 +25,8 @@ class Sudoku {
   remainingSpace(){
     let verdict = false;
     this.board.forEach( row => {
-      verdict = (row.includes(0) ? true : verdict)
-    })
+      verdict = (row.includes(0) ? true : verdict);
+    });
     return verdict
   }
 
@@ -60,13 +60,13 @@ class Sudoku {
   }
 
   findNumbersInThreeByThree([x,y]){
-    let position = this.identifyThreeByThreeSquare([x,y])
+    let position = this.identifyThreeByThreeSquare([x,y]);
     x = position[0];
     y = position[1];
-    let top = this.row(y).slice(x, x+3)
-    let middle = this.row(y+1).slice(x, x+3)
-    let bottom = this.row(y+2).slice(x, x+3)
-    let numbers = top.concat(middle).concat(bottom)
+    let top = this.row(y).slice(x, x+3);
+    let middle = this.row(y+1).slice(x, x+3);
+    let bottom = this.row(y+2).slice(x, x+3);
+    let numbers = top.concat(middle).concat(bottom);
     return this.uniqueNumbers(numbers)
   }
 
@@ -75,7 +75,7 @@ class Sudoku {
     let columnNumbers = this.column(x);
     let numbers = rowNumbers.concat(columnNumbers);
     let threeByThreeNumbers = this.findNumbersInThreeByThree([x,y]);
-    numbers = numbers.concat(threeByThreeNumbers)
+    numbers = numbers.concat(threeByThreeNumbers);
     return this.uniqueNumbers(numbers)
   }
 
@@ -90,7 +90,7 @@ class Sudoku {
   }
 
   uniqueNumbers(number_array){
-    let uniqueNumbers = number_array.filter( x => typeof x === 'number')
+    let uniqueNumbers = number_array.filter( x => typeof x === 'number');
     uniqueNumbers = [...new Set(uniqueNumbers)].sort();
     return uniqueNumbers;
   }
