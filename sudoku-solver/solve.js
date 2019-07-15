@@ -129,6 +129,25 @@ class Sudoku {
     })
     return unsolved;
   }
+
+  anyErrors(){
+    let accumulator = [];
+    this.board.forEach( row => {
+      let numberFrequencies = {'1':0, '2':0, '3':0, '4':0, '5':0, '6':0, '7':0, '8':0, '9':0}
+
+      row.forEach( number => {
+        if (number){
+          numberFrequencies[`${number}`] += 1;
+        }
+      })
+      numberFrequencies = Object.values(numberFrequencies);
+      let checkingFrequencies = numberFrequencies.map( frequency => frequency > 1)
+      if (checkingFrequencies.includes(true)){
+        accumulator.push(true);
+      }
+    })
+    return accumulator.includes(true) ? true : false ;
+  }
 }
 
 let mySudoku = new Sudoku(assignedBoard);
