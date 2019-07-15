@@ -5,6 +5,9 @@ class Sudoku {
   constructor(board){
     this.board = board;
     this.solveEasySpaces();
+    if (this.findUnsolvedSpaces().length === 0){
+      console.log("Sudoku puzzle solved!");
+    }
   }
 
   column(position){
@@ -50,7 +53,7 @@ class Sudoku {
       else if ([6,7,8].includes(y)){return [3,6];}
     }
     else if([6,7,8].includes(x)){
-      if ([0,1,2].includes(y)){return [6,1];}
+      if ([0,1,2].includes(y)){return [6,0];}
       else if ([3,4,5].includes(y)){return [6,3];}
       else if ([6,7,8].includes(y)){return [6,6];}
     }
@@ -76,6 +79,16 @@ class Sudoku {
     return this.uniqueNumbers(numbers)
   }
 
+  findPossibleNumbersForPosition([x,y]){
+    if (this.findNumberAtPosition([x,y]) === 0){
+      let precludedNumbers = new Set(this.findNumbersAffectingPosition([x,y]));
+      let possibleNumbers = difference(NUMBERS, precludedNumbers);
+      return possibleNumbers = Array.from(possibleNumbers);
+    } else {
+      return [];
+    }
+  }
+
   uniqueNumbers(number_array){
     let uniqueNumbers = number_array.filter( x => typeof x === 'number')
     uniqueNumbers = [...new Set(uniqueNumbers)].sort();
@@ -87,14 +100,11 @@ class Sudoku {
     let shouldLoopContinue = true;
     while (shouldLoopContinue){
       let changes = [];
-      for (let x = 0; x < 9; x++){
-        for (let y = 0; y < 9; y++){
-          let precludedNumbers = new Set(this.findNumbersAffectingPosition([x,y]));
-          let possibleNumbers = difference(NUMBERS, precludedNumbers)
-          possibleNumbers = Array.from(possibleNumbers)
+      for (let y = 0; y < 9; y++){
+        for (let x = 0; x < 9; x++){
+          let possibleNumbers = this.findPossibleNumbersForPosition([x,y]);
           if (possibleNumbers.length === 1 && this.findNumberAtPosition([x,y]) === 0){
-            console.log("Put number " + possibleNumbers[0] + " at position x:" + x + " y:" + y);
-            this.updateNumberAtPosition([x,y], possibleNumbers[0] )
+            this.updateNumberAtPosition([x,y], possibleNumbers[0]);
             changes.push(true);
           } else {
             changes.push(false);
