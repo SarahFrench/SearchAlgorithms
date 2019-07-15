@@ -5,7 +5,8 @@ class Sudoku {
   constructor(board){
     this.board = board;
     this.solveEasySpaces();
-    if (this.findUnsolvedSpaces().length === 0){
+    this.solved = !this.remainingSpace();
+    if (this.solved){
       console.log("Sudoku puzzle solved!");
     }
   }
