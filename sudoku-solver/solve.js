@@ -99,19 +99,19 @@ class Sudoku {
   solveEasySpaces(){
     // Finds easy to solve spaces and keeps trying to solve these until they run out
     let shouldLoopContinue = true;
+
     while (shouldLoopContinue){
       let changes = [];
-      for (let y = 0; y < 9; y++){
-        for (let x = 0; x < 9; x++){
-          let possibleNumbers = this.findPossibleNumbersForPosition([x,y]);
-          if (possibleNumbers.length === 1 && this.findNumberAtPosition([x,y]) === 0){
-            this.updateNumberAtPosition([x,y], possibleNumbers[0]);
-            changes.push(true);
-          } else {
-            changes.push(false);
-          }
+      let unsolvedSpaces = this.findUnsolvedSpaces()
+      unsolvedSpaces.forEach( position => {
+        let possibleNumbers = this.findPossibleNumbersForPosition(position);
+        if (possibleNumbers.length === 1){
+          this.updateNumberAtPosition(position, possibleNumbers[0]);
+          changes.push(true);
+        } else {
+          changes.push(false);
         }
-      }
+      })
       if (!changes.includes(true)){
         shouldLoopContinue = false;
       }
