@@ -1,6 +1,37 @@
 const {easyBoard, assignedBoard} = require('./sudoku-boards.js');
 const {isSuperset, difference, NUMBERS} = require('./functions-and-constants.js');
 
+class Node {
+  constructor(board) {
+    this.sudoku = new Sudoku(board);
+    this.position = this.sudoku.findUnsolvedSpaces()[0]
+    this.possibilities = this.sudoku.findPossibleNumbersForPosition(this.position)
+    if (this.possibilities.length > 0){
+      this.makeChildNodes(this.possibilities);
+    }
+  }
+
+  makeChildNodes(possibilities){
+    this.possibilities.forEach(choice => {
+      let resultSudoku = new Sudoku(this.sudoku.board)
+      resultSudoku.updateNumberAtPosition(this.position, choice)
+      if (!resultSudoku.anyErrors()){
+        if (!resultSudoku.remainingSpace()){
+          console.log("Sudoku puzzle solved!");
+          return resultSudoku.sudoku;
+        } else {
+          this[`${choice}`] = new Node(resultSudoku.board)
+          return this[choice]
+        }
+      } else {
+        console.log(`ERROR DETECTED after adding ${choice} in position [${this.position}]`);
+        return this.sudoku;
+      }
+    })
+  }
+
+}
+
 class Sudoku {
   constructor(board){
     this.board = board;
@@ -148,9 +179,13 @@ class Sudoku {
     })
     return accumulator.includes(true) ? true : false ;
   }
-}
 
-let mySudoku = new Sudoku(assignedBoard);
+  printBoard(){
+    this.board.forEach( row => {
+      console.log(row);
+    })
+  }
+}
 
 mySudoku.board.forEach( row => {
   console.log(row);
