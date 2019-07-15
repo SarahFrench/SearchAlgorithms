@@ -1,37 +1,10 @@
-let row1 = [0,0,0,0,0,2,1,0,0];
-let row2 = [0,0,4,0,0,8,7,0,0];
-let row3 = [0,2,0,3,0,0,9,0,0];
-let row4 = [6,0,2,0,0,3,0,4,0];
-let row5 = [0,0,0,0,0,0,0,0,0];
-let row6 = [0,5,0,6,0,0,3,0,1];
-let row7 = [0,0,3,0,0,5,0,8,0];
-let row8 = [0,0,8,2,0,0,5,0,0];
-let row9 = [0,0,9,7,0,0,0,0,0];
-
-let board = [row1,row2,row3,row4,row5,row6,row7,row8,row9]
-
-function isSuperset(set, subset) {
-    for (var elem of subset) {
-        if (!set.has(elem)) {
-            return false;
-        }
-    }
-    return true;
-}
-
-function difference(setA, setB) {
-    var _difference = new Set(setA);
-    for (var elem of setB) {
-        _difference.delete(elem);
-    }
-    return _difference;
-}
-
-const NUMBERS = new Set([1,2,3,4,5,6,7,8,9]);
+const {easyBoard, assignedBoard} = require('./sudoku-boards.js');
+const {isSuperset, difference, NUMBERS} = require('./functions-and-constants.js');
 
 class Sudoku {
   constructor(board){
-    this.board = board
+    this.board = board;
+    this.solveEasySpaces();
   }
 
   column(position){
@@ -133,14 +106,25 @@ class Sudoku {
       }
     }
   }
+
+  findUnsolvedSpaces(){
+    let unsolved = [];
+    this.board.forEach( function(row, y){
+      row.forEach( function(space, x){
+        if (space === 0){
+          unsolved.push([x,y]);
+        }
+      })
+    })
+    return unsolved;
+  }
 }
 
-let mySudoku = new Sudoku(board);
-
-
-mySudoku.solveEasySpaces()
-
+let mySudoku = new Sudoku(assignedBoard);
 
 mySudoku.board.forEach( row => {
   console.log(row);
 })
+
+console.log(mySudoku.findUnsolvedSpaces());
+
