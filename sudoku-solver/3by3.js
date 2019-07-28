@@ -78,42 +78,42 @@ class Sudoku {
 
   }
 
-  // identifyThreeByThreeSquare([x,y]){
-  //   //defined by top left coordinate
-  //   if([0,1,2].includes(x)){
-  //     if ([0,1,2].includes(y)){return [0,0];}
-  //     else if ([3,4,5].includes(y)){return [0,3];}
-  //     else if ([6,7,8].includes(y)){return [0,6];}
-  //   }
-  //   else if([3,4,5].includes(x)){
-  //     if ([0,1,2].includes(y)){return [3,0];}
-  //     else if ([3,4,5].includes(y)){return [3,3];}
-  //     else if ([6,7,8].includes(y)){return [3,6];}
-  //   }
-  //   else if([6,7,8].includes(x)){
-  //     if ([0,1,2].includes(y)){return [6,0];}
-  //     else if ([3,4,5].includes(y)){return [6,3];}
-  //     else if ([6,7,8].includes(y)){return [6,6];}
-  //   }
-  // }
+  identifyThreeByThreeSquare([x,y]){
+    //defined by top left coordinate
+    if([0,1,2].includes(x)){
+      if ([0,1,2].includes(y)){return [0,0];}
+      else if ([3,4,5].includes(y)){return [0,3];}
+      else if ([6,7,8].includes(y)){return [0,6];}
+    }
+    else if([3,4,5].includes(x)){
+      if ([0,1,2].includes(y)){return [3,0];}
+      else if ([3,4,5].includes(y)){return [3,3];}
+      else if ([6,7,8].includes(y)){return [3,6];}
+    }
+    else if([6,7,8].includes(x)){
+      if ([0,1,2].includes(y)){return [6,0];}
+      else if ([3,4,5].includes(y)){return [6,3];}
+      else if ([6,7,8].includes(y)){return [6,6];}
+    }
+  }
 
-  // findNumbersInThreeByThree([x,y]){
-  //   let position = this.identifyThreeByThreeSquare([x,y]);
-  //   x = position[0];
-  //   y = position[1];
-  //   let top = this.row(y).slice(x, x+3);
-  //   let middle = this.row(y+1).slice(x, x+3);
-  //   let bottom = this.row(y+2).slice(x, x+3);
-  //   let numbers = top.concat(middle).concat(bottom);
-  //   return this.uniqueNumbers(numbers)
-  // }
+  findNumbersInThreeByThree([x,y]){
+    let position = this.identifyThreeByThreeSquare([x,y]);
+    x = position[0];
+    y = position[1];
+    let top = this.row(y).slice(x, x+3);
+    let middle = this.row(y+1).slice(x, x+3);
+    let bottom = this.row(y+2).slice(x, x+3);
+    let numbers = top.concat(middle).concat(bottom);
+    return this.uniqueNumbers(numbers)
+  }
 
   findNumbersAffectingPosition([x,y]){
     let rowNumbers = this.row(y);
     let columnNumbers = this.column(x);
     let numbers = rowNumbers.concat(columnNumbers);
-    // let threeByThreeNumbers = this.findNumbersInThreeByThree([x,y]);
-    // numbers = numbers.concat(threeByThreeNumbers);
+    let threeByThreeNumbers = this.findNumbersInThreeByThree([x,y]);
+    numbers = numbers.concat(threeByThreeNumbers);
     return this.uniqueNumbers(numbers)
   }
 
@@ -144,7 +144,6 @@ class Sudoku {
         let possibleNumbers = this.findPossibleNumbersForPosition(position);
         if (possibleNumbers.length === 1){
           this.updateNumberAtPosition(position, possibleNumbers[0]);
-          // console.log(`put ${possibleNumbers[0]} at position ${position}`);
           changes.push(true);
         } else {
           changes.push(false);
@@ -225,8 +224,8 @@ function solve(sudoku){
         filteredPossibilities.push(x)
       }
     })
-    console.log('filteredPossibilities ' + filteredPossibilities);
-    console.log('.length ' + filteredPossibilities.length);
+    console.log('filteredPossibilities :' + filteredPossibilities);
+    console.log('filteredPossibilities.length ' + filteredPossibilities.length);
     if(filteredPossibilities.length > 0){
       let choice = filteredPossibilities[0];
       console.log("Trying " + choice);
@@ -234,23 +233,22 @@ function solve(sudoku){
         sudoku.attempts[`${unsolved[i]}`].push(choice)
         sudoku.updateNumberAtPosition(unsolved[i], choice);
         console.log("put " + choice + " in " + unsolved[i]);
-        sudoku.printBoard();
-      } else {
-        console.log("Backtracking...(1)");
-        sudoku.updateNumberAtPosition(unsolved[i], 0);
-        i--;
-        i--;
+        if(i === unsolved.length-1){
+          sudoku.printBoard();
+        }
       }
     } else {
-      console.log("Backtracking...(2)");
+      console.log("Backtracking...");
       sudoku.updateNumberAtPosition(unsolved[i], 0);
+      sudoku.attempts[unsolved[i]]= [];
       i--;
+      sudoku.updateNumberAtPosition(unsolved[i], 0);
       i--;
     }
   }
 }
 
-let sudoku = new Sudoku(easyBoard);
+let sudoku = new Sudoku(assignedBoard);
 let unsolved = sudoku.findUnsolvedSpaces();
 unsolved.forEach( space => {
   sudoku.attempts[`${space}`] = [];
