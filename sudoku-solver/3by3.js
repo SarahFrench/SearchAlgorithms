@@ -1,22 +1,15 @@
 const {easyBoard, assignedBoard, damienBoard} = require('./sudoku-boards.js');
 const {isSuperset, difference, NUMBERS} = require('./functions-and-constants.js');
-// const NUMBERS = new Set([1,2,3]);
-
-let row1 = [2,0,3]
-let row2 = [1,0,0]
-let row3 = [0,0,1]
-let board = [row1, row2, row3]
-
-// let row1 = [3,0,1]
-// let row2 = [0,0,0]
-// let row3 = [2,1,0]
-// let board = [row1, row2, row3]
 
 class Sudoku {
   constructor(board) {
     this.board = board;
     this.attempts = {};
-    // this.solveEasySpaces();
+    this.solveEasySpaces();
+    let unsolved = this.findUnsolvedSpaces();
+    unsolved.forEach( space => {
+      this.attempts[`${space}`] = [];
+    })
   }
 
   isValidChoice(position, choice){
@@ -229,13 +222,11 @@ function solve(sudoku){
     if(filteredPossibilities.length > 0){
       let choice = filteredPossibilities[0];
       console.log("Trying " + choice);
-      if(sudoku.isValidChoice(unsolved[i], choice)){
-        sudoku.attempts[`${unsolved[i]}`].push(choice)
-        sudoku.updateNumberAtPosition(unsolved[i], choice);
-        console.log("put " + choice + " in " + unsolved[i]);
-        if(i === unsolved.length-1){
-          sudoku.printBoard();
-        }
+      sudoku.attempts[`${unsolved[i]}`].push(choice)
+      sudoku.updateNumberAtPosition(unsolved[i], choice);
+      console.log("Put " + choice + " in " + unsolved[i]);
+      if(i === unsolved.length-1 && sudoku.isSolved()){
+        sudoku.printBoard();
       }
     } else {
       console.log("Backtracking...");
@@ -249,21 +240,7 @@ function solve(sudoku){
 }
 
 let sudoku = new Sudoku(assignedBoard);
-let unsolved = sudoku.findUnsolvedSpaces();
-unsolved.forEach( space => {
-  sudoku.attempts[`${space}`] = [];
-})
-// sudoku.attempts[[1,1]].push(3)
-// console.log(sudoku.attempts[[1,1]]);
-// console.log(sudoku.attempts[[1,1]].includes(3));
-//
-// let possibilities = sudoku.findPossibleNumbersForPosition([1,1]);
-// console.log(possibilities);
-//
-//
-// // possibilities = possibilities.filter(possibility => {sudoku.attempts[[1,1]].includes(possibility)})
-// console.log(newPossibilities);
+
+
 
 solve(sudoku)
-
-// solveSudoku(sudoku)
