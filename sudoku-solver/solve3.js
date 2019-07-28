@@ -1,99 +1,17 @@
-const {easyBoard, assignedBoard} = require('./sudoku-boards.js');
+const {easyBoard, assignedBoard, damienBoard} = require('./sudoku-boards.js');
 const {isSuperset, difference, NUMBERS} = require('./functions-and-constants.js');
 
 
-
-
-class Node {
-  constructor(board, position) {
-    console.log('\nNew Node');
-    this.sudoku = new Sudoku(board);
-    this.position = position;
-    this.possibilities = this.sudoku.findPossibleNumbersForPosition(this.position)
-    if (this.checkIfPositionSolved()){
-      return true
-    } else if (this.checkIfPositionStuck()){
-      console.log("My possibilities (" + this.possibilities + ") are empty");
-      return false
-    } else {
-      let possibilities = this.possibilities;
-      for(let i=0; i<possibilities.length; i++){
-        let newBoard = this.sudoku.updateNumberAtPosition(this.position, possibilities[i]).board;
-        let newPosition = this.sudoku.findUnsolvedSpaceWithFewestOptions().position;
-        this[`${possibilities[i]}`] = new Node(newBoard, newPosition)
-        return this[`${possibilities[i]}`]
-      }
-    }
-  }
-
-  moveToNextSpace(){
-    this.position = this.sudoku.findUnsolvedSpaceWithFewestOptions().position;
-    this.possibilities = this.sudoku.findPossibleNumbersForPosition(this.position)
-  }
-
-  checkIfPositionSolved(){
-    if (this.possibilities.length === 1){
-      return true
-    } else {
-      return false
-    }
-  }
-
-  checkIfPositionStuck(){
-    if (this.possibilities === []){
-      return true
-    } else {
-      return false
-    }
-  }
-
-  evaluatePosition(childNode){
-    if(childNode){
-      this.sudoku.updateNumberAtPosition();
-      return true
-    } else {
-      return false
-    }
-  }
-
-  // updatePossibilities(childsVerdict){
-  //   if (childsVerdict){
-  //   }
-  // }
-
-
-  // makeChildNodes(possibilities){
-  //   let successful_child = false;
-  //   this.possibilities.forEach(choice => {
-  //     console.log("Trying value " + choice + " at " + this.position);
-  //     let resultSudoku = new Sudoku(this.sudoku.board);
-  //     resultSudoku.updateNumberAtPosition(this.position, choice);
-  //     nextPosition = resultSudoku.findUnsolvedSpaces()[0];
-  //     nextPossibilities = resultSudoku.findPossibleNumbersForPosition(this.position);
-  //     if (nextPossibilities != undefined){
-  //       this[`${choice}`] = new Node(resultSudoku.board, nextPossibilities)
-  //       return this[`${choice}`]
-  //     } else {
-  //       return false
-  //     }
-  //   })
-  // }
-
-}
-
 class Sudoku {
-  constructor(board){
+  constructor(board) {
     this.board = board;
-    // this.solveEasySpaces();
-    this.solved = !this.remainingSpace();
-    if (this.solved){
-      console.log("Sudoku puzzle solved!");
-    }
+    this.attempts = {};
+    this.solveEasySpaces();
   }
 
   isSolved(){
-    empty_spaces = this.remainingSpace();
-    errors_present = this.anyErrors();
+    let empty_spaces = this.remainingSpace();
+    let errors_present = this.anyErrors();
     if ( !empty_spaces && !errors_present ){
       return true;
     } else {
@@ -131,6 +49,7 @@ class Sudoku {
     console.log("before:" + this.board[y][x]);
     this.board[y][x] = value;
     console.log("after:" + this.board[y][x]);
+    // this.printBoard()
 
   }
 
@@ -210,6 +129,11 @@ class Sudoku {
         shouldLoopContinue = false;
       }
     }
+    if (this.isSolved()){
+      this.solved = true;
+      console.log("Sudoku puzzle solved!");
+      this.printBoard();
+    }
   }
 
   findUnsolvedSpaces(){
@@ -263,27 +187,25 @@ class Sudoku {
   }
 }
 
-let mySudoku = new Sudoku (assignedBoard)
-// mySudoku.updateNumberAtPosition([0,0], 3)
-// mySudoku.updateNumberAtPosition([1,0], 6)
-// mySudoku.updateNumberAtPosition([2,0], 5)
-// mySudoku.updateNumberAtPosition([3,0], 4)
-// mySudoku.updateNumberAtPosition([4,0], 7)
-// // mySudoku.solveEasySpaces()
-mySudoku.printBoard()
-// console.log(mySudoku.findUnsolvedSpaceWithFewestOptions())
+function solveSudoku(sudoku){
+  sudoku.solveEasySpaces();
+  let emptySpaces = sudoku.findUnsolvedSpaces();
+  emptySpaces.forEach(space => {
+    let possibilities = sudoku.findPossibleNumbersForPosition(space);
+    possibilities.filter(option => { !sudoku.attempts[`${space}`].includes(option)})
+    let choice = possibilities.pop();
+    sudoku.updateNumberAtPosition()
+  })
 
-// console.log(mySudoku.findPossibleNumbersForPosition([7,0]))
+}
 
-let tree = new Node(mySudoku.board, [0,0])
-console.log();
-console.log(tree);
-//
-// // mySudoku.board.forEach( row => {
-//   console.log(row);
-// })
-//
-// console.log();
-// console.log(mySudoku.findUnsolvedSpaces()[0]);
-//
-// console.log(mySudoku.findNumbersAffectingPosition(4));
+let sudoku = new Sudoku(assignedBoard);
+let unsolved = sudoku.findUnsolvedSpaces();
+unsolved.forEach( space => {
+  sudoku.attempts[`${space}`] = [];
+})
+console.log(sudoku);
+
+// sudoku.solveEasySpaces()
+
+solveSudoku(sudoku)
