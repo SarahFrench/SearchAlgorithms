@@ -25,7 +25,22 @@ let easyRow9 = [0,0,0,0,0,1,0,0,4];
 
 let easyBoard = [easyRow1,easyRow2,easyRow3,easyRow4,easyRow5,easyRow6,easyRow7,easyRow8,easyRow9]
 
+
+// another Sudoku
+let anotherRow1 = [8,0,0,0,0,0,0,0,0];
+let anotherRow2 = [0,0,3,6,0,0,0,0,0];
+let anotherRow3 = [0,7,0,0,9,0,2,0,0];
+let anotherRow4 = [0,5,0,0,0,7,0,0,0];
+let anotherRow5 = [0,0,0,0,4,5,7,0,0];
+let anotherRow6 = [0,0,0,1,0,0,0,3,0];
+let anotherRow7 = [0,0,1,0,0,0,0,6,8];
+let anotherRow8 = [0,0,8,5,0,0,0,1,0];
+let anotherRow9 = [0,9,0,0,0,0,4,0,0];
+
+let anotherBoard = [anotherRow1,anotherRow2,anotherRow3,anotherRow4,anotherRow5,anotherRow6,anotherRow7,anotherRow8,anotherRow9]
+
 module.exports = {
   assignedBoard,
-  easyBoard
+  easyBoard,
+  anotherBoard
 }
