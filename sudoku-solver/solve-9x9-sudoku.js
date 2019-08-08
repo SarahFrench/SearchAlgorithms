@@ -220,7 +220,9 @@ function solve(sudoku){
       sudoku.attempts[`${unsolved[i]}`].push(choice)
       sudoku.updateNumberAtPosition(unsolved[i], choice);
       if(i === unsolved.length-1 && sudoku.isSolved()){
+        console.log("\nSudoku solved, here's the answer:");
         sudoku.printBoard();
+        console.log('\n');
       }
     } else {
       sudoku.updateNumberAtPosition(unsolved[i], 0);
@@ -234,7 +236,8 @@ function solve(sudoku){
 
 let sudoku = new Sudoku(anotherBoard);
 
-
+console.log("\nTrying to solve this sudoku:");
+console.log(sudoku.printBoard());
 
 solve(sudoku)
 

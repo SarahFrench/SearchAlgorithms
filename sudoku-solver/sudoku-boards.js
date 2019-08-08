@@ -37,7 +37,7 @@ let anotherRow7 = [0,0,1,0,0,0,0,6,8];
 let anotherRow8 = [0,0,8,5,0,0,0,1,0];
 let anotherRow9 = [0,9,0,0,0,0,4,0,0];
 
-let anotherBoard = [anotherRow1,anotherRow2,anotherRow3,anotherRow4,anotherRow5,anotherRow6,anotherRow7,anotherRow8,anotherRow9]
+let anotherBoard = [anotherRow1,anotherRow2,anotherRow3,anotherRow4,anotherRow5,anotherRow6,anotherRow7,anotherRow8,anotherRow9];
 
 module.exports = {
   assignedBoard,
